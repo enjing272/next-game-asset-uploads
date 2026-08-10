@@ -1,0 +1,32 @@
+:root {
+  color-scheme: dark;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: #101315;
+  color: #f4f1e8;
+}
+
+* { box-sizing: border-box; }
+
+body { margin: 0; }
+
+main {
+  width: min(680px, calc(100% - 32px));
+  margin: 72px auto;
+}
+
+h1 { font-size: clamp(2rem, 8vw, 4.5rem); line-height: 1; margin: 0 0 24px; }
+p { color: #b8c0b7; line-height: 1.6; }
+form { display: grid; gap: 16px; margin-top: 40px; }
+label { display: grid; gap: 8px; color: #d8ded6; }
+input, select, button {
+  width: 100%;
+  border: 1px solid #3f4942;
+  background: #191e1a;
+  color: inherit;
+  padding: 13px 14px;
+  border-radius: 4px;
+  font: inherit;
+}
+button { background: #d7ff52; border-color: #d7ff52; color: #101315; cursor: pointer; font-weight: 700; }
+button:disabled { cursor: wait; opacity: 0.65; }
+[role="status"] { min-height: 24px; color: #d7ff52; }
