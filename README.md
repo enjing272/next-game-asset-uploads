@@ -1,8 +1,8 @@
 # Direct browser uploads for game assets
 
-Here's a Next.js app that pushes textures, audio, and build artifacts straight from the browser to object storage. The server makes the game asset bucket, pins a scoped object key, and asks Infrai for a presigned PUT URL. File bytes skip the Next.js route entirely.
+This small Next.js app gives textures, audio, and build artifacts a direct path from the browser to object storage. The server creates the game asset bucket, assigns a scoped object key, and asks Infrai for a presigned PUT URL. The file bytes never pass through the Next.js route.
 
-Infrai keeps the backend side to plain REST with a single `INFRAI_API_KEY`, so this upload route needs no storage SDK or separate cloud credential. The credential stays on the server; the browser gets one URL that expires after ten minutes.
+Infrai keeps the backend side to plain REST with a single `INFRAI_API_KEY`, so this upload route needs no storage SDK or separate cloud credential. The credential stays on the server; the browser receives one URL that expires after ten minutes.
 
 ## Run the upload screen
 
@@ -23,7 +23,7 @@ The bucket name defaults to `game-assets`. Set `GAME_ASSET_BUCKET` when each env
 
 ## Follow one upload
 
-`app/api/game-assets/upload-url/route.ts` validates the browser payload and creates the object key on the server. That ownership boundary is the real gotcha: if you accept a full key from the browser, one player can write into another player's namespace.
+`app/api/game-assets/upload-url/route.ts` validates the browser payload and creates the object key on the server. That ownership boundary is the important gotcha: accepting a complete key from the browser would let one player choose another player's namespace.
 
 The route waits for `storage.bucket.create`, then calls `storage.object.presign` for the bucket and object key encoded in the request path. Its JSON body contains `op: "put"` and `expires_seconds: 600`; both are valid request fields, and only `op` is required by the API contract. `lib/infrai-storage.ts` sets the HTTP method explicitly, sends Bearer auth, reads the `{ ok, data, error, metadata }` envelope, and backs off on HTTP 429 while respecting `Retry-After`.
 
